@@ -1,30 +1,27 @@
 import { escapeText, escapeAttribute } from "entities/lib/escape.js";
 import { TAG_NAMES as $, NS, hasUnescapedText } from "../common";
 import DefaultAdapter from "../adapter";
-// Sets
-const VOID_ELEMENTS =
-  new Set() <
-  string >
-  [
-    $.AREA,
-    $.BASE,
-    $.BASEFONT,
-    $.BGSOUND,
-    $.BR,
-    $.COL,
-    $.EMBED,
-    $.FRAME,
-    $.HR,
-    $.IMG,
-    $.INPUT,
-    $.KEYGEN,
-    $.LINK,
-    $.META,
-    $.PARAM,
-    $.SOURCE,
-    $.TRACK,
-    $.WBR,
-  ];
+
+const VOID_ELEMENTS = new Set([
+  $.AREA,
+  $.BASE,
+  $.BASEFONT,
+  $.BGSOUND,
+  $.BR,
+  $.COL,
+  $.EMBED,
+  $.FRAME,
+  $.HR,
+  $.IMG,
+  $.INPUT,
+  $.KEYGEN,
+  $.LINK,
+  $.META,
+  $.PARAM,
+  $.SOURCE,
+  $.TRACK,
+  $.WBR,
+]);
 
 function isVoidElement(node, options) {
   return (
@@ -45,7 +42,6 @@ export function serialize(node, options) {
 
   return serializeChildNodes(node, opts);
 }
-
 
 export function serializeOuter(node, options) {
   const opts = { ...defaultOpts, ...options };
