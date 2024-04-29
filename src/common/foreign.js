@@ -1,12 +1,10 @@
 import { TAG_ID as $, NS, ATTRS, getTagID } from "./html.js";
 
-//MIME types
 const MIME_TYPES = {
   TEXT_HTML: "text/html",
   APPLICATION_XML: "application/xhtml+xml",
 };
 
-//Attributes
 const DEFINITION_URL_ATTR = "definitionurl";
 const ADJUSTED_DEFINITION_URL_ATTR = "definitionURL";
 const SVG_ATTRS_ADJUSTMENT_MAP = new Map(
@@ -86,7 +84,6 @@ const XML_ATTRS_ADJUSTMENT_MAP = new Map([
   ["xmlns:xlink", { prefix: "xmlns", name: "xlink", namespace: NS.XMLNS }],
 ]);
 
-//SVG tag names adjustment map
 export const SVG_TAG_NAMES_ADJUSTMENT_MAP = new Map(
   [
     "altGlyph",
@@ -128,7 +125,6 @@ export const SVG_TAG_NAMES_ADJUSTMENT_MAP = new Map(
   ].map((tn) => [tn.toLowerCase(), tn])
 );
 
-//Tags that causes exit from foreign content
 const EXITS_FOREIGN_CONTENT = new Set([
   $.B,
   $.BIG,
@@ -176,7 +172,6 @@ const EXITS_FOREIGN_CONTENT = new Set([
   $.VAR,
 ]);
 
-//Check exit from foreign content
 export function causesExit(startTagToken) {
   const tn = startTagToken.tagID;
   const isFontWithAttrs =
@@ -189,7 +184,6 @@ export function causesExit(startTagToken) {
   return isFontWithAttrs || EXITS_FOREIGN_CONTENT.has(tn);
 }
 
-//Token adjustments
 export function adjustTokenMathMLAttrs(token) {
   for (let i = 0; i < token.attrs.length; i++) {
     if (token.attrs[i].name === DEFINITION_URL_ATTR) {
@@ -230,7 +224,6 @@ export function adjustTokenSVGTagName(token) {
   }
 }
 
-//Integration points
 function isMathMLTextIntegrationPoint(tn, ns) {
   return (
     ns === NS.MATHML &&
