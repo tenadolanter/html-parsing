@@ -42,7 +42,6 @@ export default {
     };
   },
 
-  //Tree mutation
   appendChild(parentNode, newNode) {
     parentNode.childNodes.push(newNode);
     newNode.parentNode = parentNode;
@@ -142,7 +141,6 @@ export default {
     }
   },
 
-  //Tree traversing
   getFirstChild(node) {
     return node.childNodes[0];
   },
@@ -159,7 +157,6 @@ export default {
     return element.attrs;
   },
 
-  //Node data
   getTagName(element) {
     return element.tagName;
   },
@@ -188,7 +185,6 @@ export default {
     return doctypeNode.systemId;
   },
 
-  //Node types
   isTextNode(node) {
     return node.nodeName === "#text";
   },
@@ -205,7 +201,6 @@ export default {
     return Object.prototype.hasOwnProperty.call(node, "tagName");
   },
 
-  // Source code location
   setNodeSourceCodeLocation(node, location) {
     node.sourceCodeLocation = location;
   },

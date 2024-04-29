@@ -236,7 +236,6 @@ export default class Tokenizer {
     }
   }
 
-  //Token emission
   prepareToken(ct) {
     this._emitCurrentCharacterToken(ct.location);
     this.currentToken = null;
@@ -1626,11 +1625,7 @@ export default class Tokenizer {
         this.currentToken.data = "[CDATA[";
         this.state = State.BOGUS_COMMENT;
       }
-    }
-
-    //NOTE: Sequence lookups can be abrupted by hibernation. In that case, lookup
-    //results are no longer valid and we will need to start over.
-    else if (!this._ensureHibernation()) {
+    } else if (!this._ensureHibernation()) {
       this._err(ERR.incorrectlyOpenedComment);
       this._createCommentToken(2);
       this.state = State.BOGUS_COMMENT;
@@ -1980,10 +1975,7 @@ export default class Tokenizer {
           this.state = State.AFTER_DOCTYPE_PUBLIC_KEYWORD;
         } else if (this._consumeSequenceIfMatch($$.SYSTEM, false)) {
           this.state = State.AFTER_DOCTYPE_SYSTEM_KEYWORD;
-        }
-        //NOTE: sequence lookup can be abrupted by hibernation. In that case lookup
-        //results are no longer valid and we will need to start over.
-        else if (!this._ensureHibernation()) {
+        } else if (!this._ensureHibernation()) {
           this._err(ERR.invalidCharacterSequenceAfterDoctypeName);
           token.forceQuirks = true;
           this.state = State.BOGUS_DOCTYPE;

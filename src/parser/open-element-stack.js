@@ -99,7 +99,6 @@ export class OpenElementStack {
     this.currentTagId = this.tagIDs[this.stackTop];
   }
 
-  //Mutations
   push(element, tagID) {
     this.stackTop++;
 

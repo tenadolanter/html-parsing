@@ -1,7 +1,6 @@
 import { OpenElementStack } from "./open-element-stack.js";
 import { FormattingElementList, EntryType } from "./formatting-element-list.js";
 
-
 import Tokenizer, { TokenizerMode } from "../tokenizer";
 import {
   TokenType,
@@ -34,7 +33,6 @@ const HIDDEN_INPUT_TYPE = "hidden";
 const AA_OUTER_LOOP_ITER = 8;
 const AA_INNER_LOOP_ITER = 3;
 
-//Insertion modes
 const InsertionMode = {
   INITIAL: "INITIAL",
   BEFORE_HTML: "BEFORE_HTML",
@@ -147,17 +145,12 @@ export class Parser {
       ...options,
     };
 
-    //NOTE: use a <template> element as the fragment context if no context element was provided,
-    //so we will parse in a "forgiving" manner
     fragmentContext ??= opts.treeAdapter.createElement(
       TN.TEMPLATE,
       NS.HTML,
       []
     );
 
-    //NOTE: create a fake element which will be used as the `document` for fragment parsing.
-    //This is important for jsdom, where a new `document` cannot be created. This led to
-    //fragment parsing messing with the main `document`.
     const documentMock = opts.treeAdapter.createElement(
       "documentmock",
       NS.HTML,
@@ -230,8 +223,6 @@ export class Parser {
   /** @internal */
   fosterParentingEnabled = false;
 
-  //Errors
-
   /** @internal */
   _err(token, code, beforeToken) {
     if (!this.onParseError) return;
@@ -249,8 +240,6 @@ export class Parser {
 
     this.onParseError(err);
   }
-
-  //Stack events
 
   /** @internal */
   onItemPush(node, tid, isTop) {
@@ -292,7 +281,6 @@ export class Parser {
       !isHTML && !this._isIntegrationPoint(tid, current);
   }
 
-  /** @*/
   _switchToTextParsing(currentToken, nextTokenizerState) {
     this._insertElement(currentToken, NS.HTML);
     this.tokenizer.state = nextTokenizerState;
@@ -306,16 +294,12 @@ export class Parser {
     this.tokenizer.state = TokenizerMode.PLAINTEXT;
   }
 
-  //Fragment parsing
-
-  /** @*/
   _getAdjustedCurrentElement() {
     return this.openElements.stackTop === 0 && this.fragmentContext
       ? this.fragmentContext
       : this.openElements.current;
   }
 
-  /** @*/
   _findFormInFragmentContext() {
     let node = this.fragmentContext;
 
@@ -364,9 +348,6 @@ export class Parser {
     }
   }
 
-  //Tree mutation
-
-  /** @*/
   _setDocumentType(token) {
     const name = token.name || "";
     const publicId = token.publicId || "";
@@ -386,7 +367,6 @@ export class Parser {
     }
   }
 
-  /** @*/
   _attachElementToTree(element, location) {
     if (this.options.sourceCodeLocationInfo) {
       const loc = location && {
@@ -406,12 +386,6 @@ export class Parser {
     }
   }
 
-  /**
-   * For self-closing tags. Add an element to the tree, but skip adding it
-   * to the stack.
-   */
-
-  /** @*/
   _appendElement(token, namespaceURI) {
     const element = this.treeAdapter.createElement(
       token.tagName,
@@ -422,7 +396,6 @@ export class Parser {
     this._attachElementToTree(element, token.location);
   }
 
-  /** @*/
   _insertElement(token, namespaceURI) {
     const element = this.treeAdapter.createElement(
       token.tagName,
@@ -434,7 +407,6 @@ export class Parser {
     this.openElements.push(element, token.tagID);
   }
 
-  /** @*/
   _insertFakeElement(tagName, tagID) {
     const element = this.treeAdapter.createElement(tagName, NS.HTML, []);
 
@@ -442,7 +414,6 @@ export class Parser {
     this.openElements.push(element, tagID);
   }
 
-  /** @*/
   _insertTemplate(token) {
     const tmpl = this.treeAdapter.createElement(
       token.tagName,
@@ -458,7 +429,6 @@ export class Parser {
       this.treeAdapter.setNodeSourceCodeLocation(content, null);
   }
 
-  /** @*/
   _insertFakeRootElement() {
     const element = this.treeAdapter.createElement(TN.HTML, NS.HTML, []);
     if (this.options.sourceCodeLocationInfo)
@@ -468,7 +438,6 @@ export class Parser {
     this.openElements.push(element, $.HTML);
   }
 
-  /** @*/
   _appendCommentNode(token, parent) {
     const commentNode = this.treeAdapter.createCommentNode(token.data);
 
@@ -478,7 +447,6 @@ export class Parser {
     }
   }
 
-  /** @*/
   _insertCharacters(token) {
     let parent;
     let beforeElement;
@@ -505,7 +473,6 @@ export class Parser {
       : siblings.length;
     const textNode = siblings[textNodeIdx - 1];
 
-    //NOTE: if we have a location assigned by another token, then just update the end position
     const tnLoc = this.treeAdapter.getNodeSourceCodeLocation(textNode);
 
     if (tnLoc) {
@@ -520,7 +487,6 @@ export class Parser {
     }
   }
 
-  /** @*/
   _adoptNodes(donor, recipient) {
     for (
       let child = this.treeAdapter.getFirstChild(donor);
@@ -532,7 +498,6 @@ export class Parser {
     }
   }
 
-  /** @*/
   _setEndLocation(element, closingToken) {
     if (
       this.treeAdapter.getNodeSourceCodeLocation(element) &&
@@ -559,7 +524,6 @@ export class Parser {
     }
   }
 
-  //Token processing
   shouldProcessStartTagTokenInForeignContent(token) {
     if (!this.currentNotInHTML) return false;
 
@@ -588,7 +552,6 @@ export class Parser {
     );
   }
 
-  /** @*/
   _processToken(token) {
     switch (token.type) {
       case TokenType.CHARACTER: {
@@ -626,9 +589,6 @@ export class Parser {
     }
   }
 
-  //Integration points
-
-  /** @*/
   _isIntegrationPoint(tid, element, foreignNS) {
     const ns = this.treeAdapter.getNamespaceURI(element);
     const attrs = this.treeAdapter.getAttrList(element);
@@ -636,9 +596,6 @@ export class Parser {
     return isIntegrationPoint(tid, ns, attrs, foreignNS);
   }
 
-  //Active formatting elements reconstruction
-
-  /** @*/
   _reconstructActiveFormattingElements() {
     const listLength = this.activeFormattingElements.entries.length;
 
@@ -662,9 +619,6 @@ export class Parser {
     }
   }
 
-  //Close elements
-
-  /** @*/
   _closeTableCell() {
     this.openElements.generateImpliedEndTags();
     this.openElements.popUntilTableCellPopped();
@@ -672,18 +626,13 @@ export class Parser {
     this.insertionMode = InsertionMode.IN_ROW;
   }
 
-  /** @*/
   _closePElement() {
     this.openElements.generateImpliedEndTagsWithExclusion($.P);
     this.openElements.popUntilTagNamePopped($.P);
   }
 
-  //Insertion modes
-
-  /** @*/
   _resetInsertionMode() {
     for (let i = this.openElements.stackTop; i >= 0; i--) {
-      //Insertion mode reset map
       switch (
         i === 0 && this.fragmentContext
           ? this.fragmentContextID
@@ -754,7 +703,6 @@ export class Parser {
     this.insertionMode = InsertionMode.IN_BODY;
   }
 
-  /** @*/
   _resetInsertionModeForSelect(selectIdx) {
     if (selectIdx > 0) {
       for (let i = selectIdx - 1; i > 0; i--) {
@@ -772,14 +720,10 @@ export class Parser {
     this.insertionMode = InsertionMode.IN_SELECT;
   }
 
-  //Foster parenting
-
-  /** @*/
   _isElementCausesFosterParenting(tn) {
     return TABLE_STRUCTURE_TAGS.has(tn);
   }
 
-  /** @*/
   _shouldFosterParentOnInsertion() {
     return (
       this.fosterParentingEnabled &&
@@ -787,7 +731,6 @@ export class Parser {
     );
   }
 
-  /** @*/
   _findFosterParentingLocation() {
     for (let i = this.openElements.stackTop; i >= 0; i--) {
       const openElement = this.openElements.items[i];
@@ -821,7 +764,6 @@ export class Parser {
     return { parent: this.openElements.items[0], beforeElement: null };
   }
 
-  /** @*/
   _fosterParentElement(element) {
     const location = this._findFosterParentingLocation();
 
@@ -836,9 +778,6 @@ export class Parser {
     }
   }
 
-  //Special elements
-
-  /** @*/
   _isSpecialElement(element, id) {
     const ns = this.treeAdapter.getNamespaceURI(element);
 
@@ -1074,7 +1013,7 @@ export class Parser {
       this._startTagOutsideForeignContent(token);
     }
   }
-  /** @*/
+
   _startTagOutsideForeignContent(token) {
     switch (this.insertionMode) {
       case InsertionMode.INITIAL: {
@@ -1179,7 +1118,7 @@ export class Parser {
       this._endTagOutsideForeignContent(token);
     }
   }
-  /** @*/
+
   _endTagOutsideForeignContent(token) {
     switch (this.insertionMode) {
       case InsertionMode.INITIAL: {
@@ -1392,10 +1331,6 @@ export class Parser {
   }
 }
 
-//Adoption agency algorithm
-//(see: http://www.whatwg.org/specs/web-apps/current-work/multipage/tree-construction.html#adoptionAgency)
-
-//Steps 5-8 of the algorithm
 function aaObtainFormattingElementEntry(p, token) {
   let formattingElementEntry =
     p.activeFormattingElements.getElementEntryInScopeWithTagName(token.tagName);
@@ -1414,7 +1349,6 @@ function aaObtainFormattingElementEntry(p, token) {
   return formattingElementEntry;
 }
 
-//Steps 9 and 10 of the algorithm
 function aaObtainFurthestBlock(p, formattingElementEntry) {
   let furthestBlock = null;
   let idx = p.openElements.stackTop;
@@ -1439,7 +1373,6 @@ function aaObtainFurthestBlock(p, formattingElementEntry) {
   return furthestBlock;
 }
 
-//Step 13 of the algorithm
 function aaInnerLoop(p, furthestBlock, formattingElement) {
   let lastElement = furthestBlock;
   let nextElement = p.openElements.getCommonAncestor(furthestBlock);
@@ -1449,7 +1382,6 @@ function aaInnerLoop(p, furthestBlock, formattingElement) {
     element !== formattingElement;
     i++, element = nextElement
   ) {
-    //NOTE: store the next element for the next loop iteration (it may be deleted from the stack by step 9.5)
     nextElement = p.openElements.getCommonAncestor(element);
 
     const elementEntry = p.activeFormattingElements.getElementEntry(element);
@@ -1478,7 +1410,6 @@ function aaInnerLoop(p, furthestBlock, formattingElement) {
   return lastElement;
 }
 
-//Step 13.7 of the algorithm
 function aaRecreateElementFromEntry(p, elementEntry) {
   const ns = p.treeAdapter.getNamespaceURI(elementEntry.element);
   const newElement = p.treeAdapter.createElement(
@@ -1493,7 +1424,6 @@ function aaRecreateElementFromEntry(p, elementEntry) {
   return newElement;
 }
 
-//Step 14 of the algorithm
 function aaInsertLastNodeInCommonAncestor(p, commonAncestor, lastElement) {
   const tn = p.treeAdapter.getTagName(commonAncestor);
   const tid = getTagID(tn);
@@ -1511,7 +1441,6 @@ function aaInsertLastNodeInCommonAncestor(p, commonAncestor, lastElement) {
   }
 }
 
-//Steps 15-19 of the algorithm
 function aaReplaceFormattingElement(p, furthestBlock, formattingElementEntry) {
   const ns = p.treeAdapter.getNamespaceURI(formattingElementEntry.element);
   const { token } = formattingElementEntry;
@@ -1531,7 +1460,6 @@ function aaReplaceFormattingElement(p, furthestBlock, formattingElementEntry) {
   p.openElements.insertAfter(furthestBlock, newElement, token.tagID);
 }
 
-//Algorithm entry point
 function callAdoptionAgency(p, token) {
   for (let i = 0; i < AA_OUTER_LOOP_ITER; i++) {
     const formattingElementEntry = aaObtainFormattingElementEntry(p, token);
@@ -1563,8 +1491,6 @@ function callAdoptionAgency(p, token) {
     aaReplaceFormattingElement(p, furthestBlock, formattingElementEntry);
   }
 }
-
-//Generic token handlers
 
 function appendComment(p, token) {
   p._appendCommentNode(token, p.openElements.currentTmplContentOrNode);
@@ -2003,8 +1929,7 @@ function preStartTagInBody(p, token) {
   }
 
   p._insertElement(token, NS.HTML);
-  //NOTE: If the next token is a U+000A LINE FEED (LF) character token, then ignore that token and move
-  //on to the next one. (Newlines at the start of pre blocks are ignored as an authoring convenience.)
+
   p.skipNextNewLine = true;
   p.framesetOk = false;
 }
@@ -2180,8 +2105,7 @@ function imageStartTagInBody(p, token) {
 
 function textareaStartTagInBody(p, token) {
   p._insertElement(token, NS.HTML);
-  //NOTE: If the next token is a U+000A LINE FEED (LF) character token, then ignore that token and move
-  //on to the next one. (Newlines at the start of textarea elements are ignored as an authoring convenience.)
+
   p.skipNextNewLine = true;
   p.tokenizer.state = TokenizerMode.RCDATA;
   p.originalInsertionMode = p.insertionMode;
@@ -2204,8 +2128,6 @@ function iframeStartTagInBody(p, token) {
   p._switchToTextParsing(token, TokenizerMode.RAWTEXT);
 }
 
-//NOTE: here we assume that we always act as an user agent with enabled plugins, so we parse
-//<noembed> as rawtext.
 function noembedStartTagInBody(p, token) {
   p._switchToTextParsing(token, TokenizerMode.RAWTEXT);
 }
@@ -2506,8 +2428,6 @@ function bodyEndTagInBody(p, token) {
   if (p.openElements.hasInScope($.BODY)) {
     p.insertionMode = InsertionMode.AFTER_BODY;
 
-    //NOTE: <body> is never popped from the stack, so we need to updated
-    //the end location explicitly.
     if (p.options.sourceCodeLocationInfo) {
       const bodyElement = p.openElements.tryPeekProperlyNestedBodyElement();
       if (bodyElement) {
@@ -3499,8 +3419,6 @@ function endTagAfterBody(p, token) {
       p.insertionMode = InsertionMode.AFTER_AFTER_BODY;
     }
 
-    //NOTE: <html> is never popped from the stack, so we need to updated
-    //the end location explicitly.
     if (
       p.options.sourceCodeLocationInfo &&
       p.openElements.tagIDs[0] === $.HTML

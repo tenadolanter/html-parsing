@@ -51,17 +51,14 @@ export class FormattingElementList {
 
     if (candidates.length < NOAH_ARK_CAPACITY) return;
 
-    //NOTE: build attrs map for the new element, so we can perform fast lookups
     const neAttrsMap = new Map(
       neAttrs.map((neAttr) => [neAttr.name, neAttr.value])
     );
     let validCandidates = 0;
 
-    //NOTE: remove bottommost candidates, until Noah's Ark condition will not be met
     for (let i = 0; i < candidates.length; i++) {
       const candidate = candidates[i];
 
-      // We know that `candidate.attrs.length === neAttrs.length`
       if (
         candidate.attrs.every(
           (cAttr) => neAttrsMap.get(cAttr.name) === cAttr.value
@@ -76,7 +73,6 @@ export class FormattingElementList {
     }
   }
 
-  //Mutations
   insertMarker() {
     this.entries.unshift(MARKER);
   }
