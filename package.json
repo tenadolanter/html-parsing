@@ -1,6 +1,6 @@
 {
   "name": "html-parsing",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "description": "类html解析库",
   "main": "index.js",
   "scripts": {
