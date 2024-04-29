@@ -85,20 +85,12 @@ const defaultParserOptions = {
 
 export class Parser {
   treeAdapter;
-  /** @internal */
   onParseError;
   currentToken = null;
   options;
   document;
 
-  constructor(
-    options,
-    document,
-    /** @internal */
-    fragmentContext = null,
-    /** @internal */
-    scriptHandler = null
-  ) {
+  constructor(options, document, fragmentContext = null, scriptHandler = null) {
     this.options = {
       ...defaultParserOptions,
       ...options,
@@ -183,22 +175,19 @@ export class Parser {
   tokenizer;
 
   stopped = false;
-  /** @internal */
+
   insertionMode = InsertionMode.INITIAL;
-  /** @internal */
+
   originalInsertionMode = InsertionMode.INITIAL;
 
-  /** @internal */
   fragmentContextID;
 
-  /** @internal */
   headElement = null;
-  /** @internal */
+
   formElement = null;
 
-  /** @internal */
   openElements;
-  /** @internal */
+
   activeFormattingElements;
   /** Indicates that the current node is not an element in the HTML namespace */
   currentNotInHTML = false;
@@ -211,19 +200,16 @@ export class Parser {
    */
   tmplInsertionModeStack = [];
 
-  /** @internal */
   pendingCharacterTokens = [];
-  /** @internal */
+
   hasNonWhitespacePendingCharacterToken = false;
 
-  /** @internal */
   framesetOk = true;
-  /** @internal */
+
   skipNextNewLine = false;
-  /** @internal */
+
   fosterParentingEnabled = false;
 
-  /** @internal */
   _err(token, code, beforeToken) {
     if (!this.onParseError) return;
 
@@ -241,14 +227,12 @@ export class Parser {
     this.onParseError(err);
   }
 
-  /** @internal */
   onItemPush(node, tid, isTop) {
     this.treeAdapter.onItemPush?.(node);
     if (isTop && this.openElements.stackTop > 0)
       this._setContextModes(node, tid);
   }
 
-  /** @internal */
   onItemPop(node, isTop) {
     if (this.options.sourceCodeLocationInfo) {
       this._setEndLocation(node, this.currentToken);
@@ -784,7 +768,6 @@ export class Parser {
     return SPECIAL_ELEMENTS[ns].has(id);
   }
 
-  /** @internal */
   onCharacter(token) {
     this.skipNextNewLine = false;
 
@@ -856,7 +839,7 @@ export class Parser {
       default:
     }
   }
-  /** @internal */
+
   onNullCharacter(token) {
     this.skipNextNewLine = false;
 
@@ -915,7 +898,7 @@ export class Parser {
       default:
     }
   }
-  /** @internal */
+
   onComment(token) {
     this.skipNextNewLine = false;
 
@@ -962,7 +945,7 @@ export class Parser {
       default:
     }
   }
-  /** @internal */
+
   onDoctype(token) {
     this.skipNextNewLine = false;
     switch (this.insertionMode) {
@@ -984,7 +967,7 @@ export class Parser {
       default:
     }
   }
-  /** @internal */
+
   onStartTag(token) {
     this.skipNextNewLine = false;
     this.currentToken = token;
@@ -1107,7 +1090,7 @@ export class Parser {
       default:
     }
   }
-  /** @internal */
+
   onEndTag(token) {
     this.skipNextNewLine = false;
     this.currentToken = token;
@@ -1212,7 +1195,7 @@ export class Parser {
       default:
     }
   }
-  /** @internal */
+
   onEof(token) {
     switch (this.insertionMode) {
       case InsertionMode.INITIAL: {
@@ -1274,7 +1257,7 @@ export class Parser {
       default:
     }
   }
-  /** @internal */
+
   onWhitespaceCharacter(token) {
     if (this.skipNextNewLine) {
       this.skipNextNewLine = false;
