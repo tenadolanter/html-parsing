@@ -1,6 +1,6 @@
 
 import DefaultOptions from "../config.js"
-import { Tokenizer } from "../tokenizer/index.js"
+import Tokenizer from "../tokenizer"
 export class Parser {
   adapter;
   options;

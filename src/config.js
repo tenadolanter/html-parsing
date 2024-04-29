@@ -6,3 +6,4 @@ export const default_config = {
   // 解析报错时调用的方法
   onParseError: null,
 }
+
