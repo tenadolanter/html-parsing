@@ -1,12 +1,32 @@
-
+import Parser from "./parser/index.js";
+import Tokenizer, { TokenizerMode } from "./tokenizer";
+import Serialize, { SerializeOuter } from "./serializer";
+import TreeAdapter from "./adapter";
 /**
  * 解析html字符串
- * 
-*/
-export const parse = (html, options = {}) => {}
+ *
+ */
+const Parse = (html, options = {}) => {
+  return Parser.parse(html, options);
+};
 
 /**
  * 解析html片段
- * 
-*/
-export const parseFragment = (html, options = {}) => {}
+ *
+ */
+const ParseFragment = (html, options = {}) => {
+  const parser = Parser.getFragmentParser(null, options);
+  parser.tokenizer.write(html, true);
+  return parser.getFragment();
+};
+
+export {
+  Parse,
+  ParseFragment,
+  Parser,
+  Tokenizer,
+  TokenizerMode,
+  Serialize,
+  SerializeOuter,
+  TreeAdapter,
+};

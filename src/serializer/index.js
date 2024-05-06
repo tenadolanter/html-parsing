@@ -33,7 +33,7 @@ function isVoidElement(node, options) {
 
 const defaultOpts = { treeAdapter: DefaultAdapter, scriptingEnabled: true };
 
-export function serialize(node, options) {
+export default function serialize(node, options) {
   const opts = { ...defaultOpts, ...options };
 
   if (isVoidElement(node, opts)) {
@@ -43,7 +43,7 @@ export function serialize(node, options) {
   return serializeChildNodes(node, opts);
 }
 
-export function serializeOuter(node, options) {
+export function SerializeOuter(node, options) {
   const opts = { ...defaultOpts, ...options };
   return serializeNode(node, opts);
 }

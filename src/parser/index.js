@@ -83,7 +83,7 @@ const defaultParserOptions = {
   onParseError: null,
 };
 
-export class Parser {
+export default class Parser {
   treeAdapter;
   onParseError;
   currentToken = null;
