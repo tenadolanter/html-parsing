@@ -1,6 +1,6 @@
 import Parser from "./parser/index.js";
 import Tokenizer, { TokenizerMode } from "./tokenizer/index.js";
-import Serialize, { SerializeOuter } from "./serializer/index.js";
+import Serialize, { SerializeFragment, SerializeOuter } from "./serializer/index.js";
 import TreeAdapter from "./adapter/index.js";
 import ParserOption from "./config.js"
 /**
@@ -28,6 +28,7 @@ export {
   Tokenizer,
   TokenizerMode,
   Serialize,
+  SerializeFragment,
   SerializeOuter,
   TreeAdapter,
   ParserOption,

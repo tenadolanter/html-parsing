@@ -43,6 +43,14 @@ export default function serialize(node, options) {
   return serializeChildNodes(node, opts);
 }
 
+export function SerializeFragment(node, options){
+  const opts = { ...defaultOpts, ...options };
+  if (isVoidElement(node, opts)) {
+    return "";
+  }
+  return serializeChildNodes(node.childNodes[1], opts);
+}
+
 export function SerializeOuter(node, options) {
   const opts = { ...defaultOpts, ...options };
   return serializeNode(node, opts);
