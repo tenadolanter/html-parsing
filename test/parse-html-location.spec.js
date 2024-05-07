@@ -15,7 +15,6 @@ describe("解析html后保留位置信息", () => {
     `;
     const option = {
       ...ParserOption,
-      customTagEnabled: true,
       uppercaseTagEnabled: true,
       uppercaseAttrEnabled: true,
       sourceCodeLocationInfo: true,

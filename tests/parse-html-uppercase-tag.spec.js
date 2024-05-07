@@ -7,7 +7,6 @@ describe("解析html大写标签", () => {
     let sourceCode = '<div><DivName>Hi there!</DivName></div>';
     const option = {
       ...ParserOption,
-      customTagEnabled: true,
       uppercaseTagEnabled: true,
     }
     const ast = ParseFragment(sourceCode, option);
