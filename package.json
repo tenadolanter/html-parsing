@@ -2,13 +2,33 @@
   "name": "html-parsing",
   "version": "0.0.1",
   "description": "类html解析库",
-  "main": "index.js",
+  "main": "lib/index.umd.js",
+  "module": "lib/index.mjs",
+  "exports": {
+    ".": {
+      "require": "./lib/index.umd.js",
+      "import": "./lib/index.mjs"
+    },
+    "./*": "./*"
+  },
+  "files": [
+    "lib"
+  ],
+  "keywords": [
+    "html",
+    "parser",
+    "html parser",
+    "html5 parser",
+    "htmlparser",
+    "serializer",
+    "html serializer",
+    "htmlserializer"
+  ],
   "scripts": {
     "build:example": "VITE_CLI_TYPE=example vite build",
     "build:lib": "VITE_CLI_TYPE=lib vite build",
     "test": "mocha --recursive"
   },
-  "type": "module",
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/tenadolanter/html-parsing.git"

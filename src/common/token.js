@@ -4,7 +4,7 @@ import {
   isUndefinedCodePoint,
   isControlCodePoint,
 } from "./unicode.js";
-import { ERR } from "./error.js";
+import { Err } from "./error.js";
 
 export const State = {
   DATA: "DATA",
@@ -136,15 +136,15 @@ export const isScriptDataDoubleEscapeSequenceEnd = (cp) => {
 
 export const getErrorForNumericCharacterReference = (code) => {
   if (code === $.NULL) {
-    return ERR.nullCharacterReference;
+    return Err.nullCharacterReference;
   } else if (code > 0x10_ff_ff) {
-    return ERR.characterReferenceOutsideUnicodeRange;
+    return Err.characterReferenceOutsideUnicodeRange;
   } else if (isSurrogate(code)) {
-    return ERR.surrogateCharacterReference;
+    return Err.surrogateCharacterReference;
   } else if (isUndefinedCodePoint(code)) {
-    return ERR.noncharacterCharacterReference;
+    return Err.noncharacterCharacterReference;
   } else if (isControlCodePoint(code) || code === $.CARRIAGE_RETURN) {
-    return ERR.controlCharacterReference;
+    return Err.controlCharacterReference;
   }
   return null;
 };

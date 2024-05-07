@@ -14,6 +14,7 @@ import {
   getErrorForNumericCharacterReference,
   TokenType,
   State,
+  Err,
 } from "../common/index.js";
 
 export const TokenizerMode = {
@@ -53,11 +54,11 @@ export default class Tokenizer {
       handler.onParseError
         ? {
             missingSemicolonAfterCharacterReference: () => {
-              this._err(ERR.missingSemicolonAfterCharacterReference, 1);
+              this._err(Err.missingSemicolonAfterCharacterReference, 1);
             },
             absenceOfDigitsInNumericCharacterReference: (consumed) => {
               this._err(
-                ERR.absenceOfDigitsInNumericCharacterReference,
+                Err.absenceOfDigitsInNumericCharacterReference,
                 this.entityStartPos - this.preprocessor.pos + consumed
               );
             },
@@ -225,7 +226,7 @@ export default class Tokenizer {
         this._leaveAttrValue();
       }
     } else {
-      this._err(ERR.duplicateAttribute);
+      this._err(Err.duplicateAttribute);
     }
   }
   _leaveAttrValue() {
@@ -260,11 +261,11 @@ export default class Tokenizer {
       this.handler.onStartTag(ct);
     } else {
       if (ct.attrs.length > 0) {
-        this._err(ERR.endTagWithAttributes);
+        this._err(Err.endTagWithAttributes);
       }
 
       if (ct.selfClosing) {
-        this._err(ERR.endTagWithTrailingSolidus);
+        this._err(Err.endTagWithTrailingSolidus);
       }
 
       this.handler.onEndTag(ct);
@@ -685,7 +686,7 @@ export default class Tokenizer {
         break;
       }
       case $.NULL: {
-        this._err(ERR.unexpectedNullCharacter);
+        this._err(Err.unexpectedNullCharacter);
         this._emitCodePoint(cp);
         break;
       }
@@ -710,7 +711,7 @@ export default class Tokenizer {
         break;
       }
       case $.NULL: {
-        this._err(ERR.unexpectedNullCharacter);
+        this._err(Err.unexpectedNullCharacter);
         this._emitChars(REPLACEMENT_CHARACTER);
         break;
       }
@@ -731,7 +732,7 @@ export default class Tokenizer {
         break;
       }
       case $.NULL: {
-        this._err(ERR.unexpectedNullCharacter);
+        this._err(Err.unexpectedNullCharacter);
         this._emitChars(REPLACEMENT_CHARACTER);
         break;
       }
@@ -752,7 +753,7 @@ export default class Tokenizer {
         break;
       }
       case $.NULL: {
-        this._err(ERR.unexpectedNullCharacter);
+        this._err(Err.unexpectedNullCharacter);
         this._emitChars(REPLACEMENT_CHARACTER);
         break;
       }
@@ -769,7 +770,7 @@ export default class Tokenizer {
   _statePlaintext(cp) {
     switch (cp) {
       case $.NULL: {
-        this._err(ERR.unexpectedNullCharacter);
+        this._err(Err.unexpectedNullCharacter);
         this._emitChars(REPLACEMENT_CHARACTER);
         break;
       }
@@ -799,20 +800,20 @@ export default class Tokenizer {
           break;
         }
         case $.QUESTION_MARK: {
-          this._err(ERR.unexpectedQuestionMarkInsteadOfTagName);
+          this._err(Err.unexpectedQuestionMarkInsteadOfTagName);
           this._createCommentToken(1);
           this.state = State.BOGUS_COMMENT;
           this._stateBogusComment(cp);
           break;
         }
         case $.EOF: {
-          this._err(ERR.eofBeforeTagName);
+          this._err(Err.eofBeforeTagName);
           this._emitChars("<");
           this._emitEOFToken();
           break;
         }
         default: {
-          this._err(ERR.invalidFirstCharacterOfTagName);
+          this._err(Err.invalidFirstCharacterOfTagName);
           this._emitChars("<");
           this.state = State.DATA;
           this._stateData(cp);
@@ -828,18 +829,18 @@ export default class Tokenizer {
     } else
       switch (cp) {
         case $.GREATER_THAN_SIGN: {
-          this._err(ERR.missingEndTagName);
+          this._err(Err.missingEndTagName);
           this.state = State.DATA;
           break;
         }
         case $.EOF: {
-          this._err(ERR.eofBeforeTagName);
+          this._err(Err.eofBeforeTagName);
           this._emitChars("</");
           this._emitEOFToken();
           break;
         }
         default: {
-          this._err(ERR.invalidFirstCharacterOfTagName);
+          this._err(Err.invalidFirstCharacterOfTagName);
           this._createCommentToken(2);
           this.state = State.BOGUS_COMMENT;
           this._stateBogusComment(cp);
@@ -868,12 +869,12 @@ export default class Tokenizer {
         break;
       }
       case $.NULL: {
-        this._err(ERR.unexpectedNullCharacter);
+        this._err(Err.unexpectedNullCharacter);
         token.tagName += REPLACEMENT_CHARACTER;
         break;
       }
       case $.EOF: {
-        this._err(ERR.eofInTag);
+        this._err(Err.eofInTag);
         this._emitEOFToken();
         break;
       }
@@ -1050,12 +1051,12 @@ export default class Tokenizer {
         break;
       }
       case $.NULL: {
-        this._err(ERR.unexpectedNullCharacter);
+        this._err(Err.unexpectedNullCharacter);
         this._emitChars(REPLACEMENT_CHARACTER);
         break;
       }
       case $.EOF: {
-        this._err(ERR.eofInScriptHtmlCommentLikeText);
+        this._err(Err.eofInScriptHtmlCommentLikeText);
         this._emitEOFToken();
         break;
       }
@@ -1077,13 +1078,13 @@ export default class Tokenizer {
         break;
       }
       case $.NULL: {
-        this._err(ERR.unexpectedNullCharacter);
+        this._err(Err.unexpectedNullCharacter);
         this.state = State.SCRIPT_DATA_ESCAPED;
         this._emitChars(REPLACEMENT_CHARACTER);
         break;
       }
       case $.EOF: {
-        this._err(ERR.eofInScriptHtmlCommentLikeText);
+        this._err(Err.eofInScriptHtmlCommentLikeText);
         this._emitEOFToken();
         break;
       }
@@ -1110,13 +1111,13 @@ export default class Tokenizer {
         break;
       }
       case $.NULL: {
-        this._err(ERR.unexpectedNullCharacter);
+        this._err(Err.unexpectedNullCharacter);
         this.state = State.SCRIPT_DATA_ESCAPED;
         this._emitChars(REPLACEMENT_CHARACTER);
         break;
       }
       case $.EOF: {
-        this._err(ERR.eofInScriptHtmlCommentLikeText);
+        this._err(Err.eofInScriptHtmlCommentLikeText);
         this._emitEOFToken();
         break;
       }
@@ -1192,12 +1193,12 @@ export default class Tokenizer {
         break;
       }
       case $.NULL: {
-        this._err(ERR.unexpectedNullCharacter);
+        this._err(Err.unexpectedNullCharacter);
         this._emitChars(REPLACEMENT_CHARACTER);
         break;
       }
       case $.EOF: {
-        this._err(ERR.eofInScriptHtmlCommentLikeText);
+        this._err(Err.eofInScriptHtmlCommentLikeText);
         this._emitEOFToken();
         break;
       }
@@ -1220,13 +1221,13 @@ export default class Tokenizer {
         break;
       }
       case $.NULL: {
-        this._err(ERR.unexpectedNullCharacter);
+        this._err(Err.unexpectedNullCharacter);
         this.state = State.SCRIPT_DATA_DOUBLE_ESCAPED;
         this._emitChars(REPLACEMENT_CHARACTER);
         break;
       }
       case $.EOF: {
-        this._err(ERR.eofInScriptHtmlCommentLikeText);
+        this._err(Err.eofInScriptHtmlCommentLikeText);
         this._emitEOFToken();
         break;
       }
@@ -1254,13 +1255,13 @@ export default class Tokenizer {
         break;
       }
       case $.NULL: {
-        this._err(ERR.unexpectedNullCharacter);
+        this._err(Err.unexpectedNullCharacter);
         this.state = State.SCRIPT_DATA_DOUBLE_ESCAPED;
         this._emitChars(REPLACEMENT_CHARACTER);
         break;
       }
       case $.EOF: {
-        this._err(ERR.eofInScriptHtmlCommentLikeText);
+        this._err(Err.eofInScriptHtmlCommentLikeText);
         this._emitEOFToken();
         break;
       }
@@ -1316,7 +1317,7 @@ export default class Tokenizer {
         break;
       }
       case $.EQUALS_SIGN: {
-        this._err(ERR.unexpectedEqualsSignBeforeAttributeName);
+        this._err(Err.unexpectedEqualsSignBeforeAttributeName);
         this._createAttr("=");
         this.state = State.ATTRIBUTE_NAME;
         break;
@@ -1351,12 +1352,12 @@ export default class Tokenizer {
       case $.QUOTATION_MARK:
       case $.APOSTROPHE:
       case $.LESS_THAN_SIGN: {
-        this._err(ERR.unexpectedCharacterInAttributeName);
+        this._err(Err.unexpectedCharacterInAttributeName);
         this.currentAttr.name += String.fromCodePoint(cp);
         break;
       }
       case $.NULL: {
-        this._err(ERR.unexpectedNullCharacter);
+        this._err(Err.unexpectedNullCharacter);
         this.currentAttr.name += REPLACEMENT_CHARACTER;
         break;
       }
@@ -1390,7 +1391,7 @@ export default class Tokenizer {
         break;
       }
       case $.EOF: {
-        this._err(ERR.eofInTag);
+        this._err(Err.eofInTag);
         this._emitEOFToken();
         break;
       }
@@ -1419,7 +1420,7 @@ export default class Tokenizer {
         break;
       }
       case $.GREATER_THAN_SIGN: {
-        this._err(ERR.missingAttributeValue);
+        this._err(Err.missingAttributeValue);
         this.state = State.DATA;
         this.emitCurrentTagToken();
         break;
@@ -1442,12 +1443,12 @@ export default class Tokenizer {
         break;
       }
       case $.NULL: {
-        this._err(ERR.unexpectedNullCharacter);
+        this._err(Err.unexpectedNullCharacter);
         this.currentAttr.value += REPLACEMENT_CHARACTER;
         break;
       }
       case $.EOF: {
-        this._err(ERR.eofInTag);
+        this._err(Err.eofInTag);
         this._emitEOFToken();
         break;
       }
@@ -1468,12 +1469,12 @@ export default class Tokenizer {
         break;
       }
       case $.NULL: {
-        this._err(ERR.unexpectedNullCharacter);
+        this._err(Err.unexpectedNullCharacter);
         this.currentAttr.value += REPLACEMENT_CHARACTER;
         break;
       }
       case $.EOF: {
-        this._err(ERR.eofInTag);
+        this._err(Err.eofInTag);
         this._emitEOFToken();
         break;
       }
@@ -1504,7 +1505,7 @@ export default class Tokenizer {
         break;
       }
       case $.NULL: {
-        this._err(ERR.unexpectedNullCharacter);
+        this._err(Err.unexpectedNullCharacter);
         this.currentAttr.value += REPLACEMENT_CHARACTER;
         break;
       }
@@ -1513,12 +1514,12 @@ export default class Tokenizer {
       case $.LESS_THAN_SIGN:
       case $.EQUALS_SIGN:
       case $.GRAVE_ACCENT: {
-        this._err(ERR.unexpectedCharacterInUnquotedAttributeValue);
+        this._err(Err.unexpectedCharacterInUnquotedAttributeValue);
         this.currentAttr.value += String.fromCodePoint(cp);
         break;
       }
       case $.EOF: {
-        this._err(ERR.eofInTag);
+        this._err(Err.eofInTag);
         this._emitEOFToken();
         break;
       }
@@ -1550,12 +1551,12 @@ export default class Tokenizer {
         break;
       }
       case $.EOF: {
-        this._err(ERR.eofInTag);
+        this._err(Err.eofInTag);
         this._emitEOFToken();
         break;
       }
       default: {
-        this._err(ERR.missingWhitespaceBetweenAttributes);
+        this._err(Err.missingWhitespaceBetweenAttributes);
         this.state = State.BEFORE_ATTRIBUTE_NAME;
         this._stateBeforeAttributeName(cp);
       }
@@ -1572,12 +1573,12 @@ export default class Tokenizer {
         break;
       }
       case $.EOF: {
-        this._err(ERR.eofInTag);
+        this._err(Err.eofInTag);
         this._emitEOFToken();
         break;
       }
       default: {
-        this._err(ERR.unexpectedSolidusInTag);
+        this._err(Err.unexpectedSolidusInTag);
         this.state = State.BEFORE_ATTRIBUTE_NAME;
         this._stateBeforeAttributeName(cp);
       }
@@ -1599,7 +1600,7 @@ export default class Tokenizer {
         break;
       }
       case $.NULL: {
-        this._err(ERR.unexpectedNullCharacter);
+        this._err(Err.unexpectedNullCharacter);
         token.data += REPLACEMENT_CHARACTER;
         break;
       }
@@ -1620,13 +1621,13 @@ export default class Tokenizer {
       if (this.inForeignNode) {
         this.state = State.CDATA_SECTION;
       } else {
-        this._err(ERR.cdataInHtmlContent);
+        this._err(Err.cdataInHtmlContent);
         this._createCommentToken($$.CDATA_START.length + 1);
         this.currentToken.data = "[CDATA[";
         this.state = State.BOGUS_COMMENT;
       }
     } else if (!this._ensureHibernation()) {
-      this._err(ERR.incorrectlyOpenedComment);
+      this._err(Err.incorrectlyOpenedComment);
       this._createCommentToken(2);
       this.state = State.BOGUS_COMMENT;
       this._stateBogusComment(cp);
@@ -1640,7 +1641,7 @@ export default class Tokenizer {
         break;
       }
       case $.GREATER_THAN_SIGN: {
-        this._err(ERR.abruptClosingOfEmptyComment);
+        this._err(Err.abruptClosingOfEmptyComment);
         this.state = State.DATA;
         const token = this.currentToken;
         this.emitCurrentComment(token);
@@ -1661,13 +1662,13 @@ export default class Tokenizer {
         break;
       }
       case $.GREATER_THAN_SIGN: {
-        this._err(ERR.abruptClosingOfEmptyComment);
+        this._err(Err.abruptClosingOfEmptyComment);
         this.state = State.DATA;
         this.emitCurrentComment(token);
         break;
       }
       case $.EOF: {
-        this._err(ERR.eofInComment);
+        this._err(Err.eofInComment);
         this.emitCurrentComment(token);
         this._emitEOFToken();
         break;
@@ -1694,12 +1695,12 @@ export default class Tokenizer {
         break;
       }
       case $.NULL: {
-        this._err(ERR.unexpectedNullCharacter);
+        this._err(Err.unexpectedNullCharacter);
         token.data += REPLACEMENT_CHARACTER;
         break;
       }
       case $.EOF: {
-        this._err(ERR.eofInComment);
+        this._err(Err.eofInComment);
         this.emitCurrentComment(token);
         this._emitEOFToken();
         break;
@@ -1750,7 +1751,7 @@ export default class Tokenizer {
 
   _stateCommentLessThanSignBangDashDash(cp) {
     if (cp !== $.GREATER_THAN_SIGN && cp !== $.EOF) {
-      this._err(ERR.nestedComment);
+      this._err(Err.nestedComment);
     }
 
     this.state = State.COMMENT_END;
@@ -1765,7 +1766,7 @@ export default class Tokenizer {
         break;
       }
       case $.EOF: {
-        this._err(ERR.eofInComment);
+        this._err(Err.eofInComment);
         this.emitCurrentComment(token);
         this._emitEOFToken();
         break;
@@ -1796,7 +1797,7 @@ export default class Tokenizer {
         break;
       }
       case $.EOF: {
-        this._err(ERR.eofInComment);
+        this._err(Err.eofInComment);
         this.emitCurrentComment(token);
         this._emitEOFToken();
         break;
@@ -1819,13 +1820,13 @@ export default class Tokenizer {
         break;
       }
       case $.GREATER_THAN_SIGN: {
-        this._err(ERR.incorrectlyClosedComment);
+        this._err(Err.incorrectlyClosedComment);
         this.state = State.DATA;
         this.emitCurrentComment(token);
         break;
       }
       case $.EOF: {
-        this._err(ERR.eofInComment);
+        this._err(Err.eofInComment);
         this.emitCurrentComment(token);
         this._emitEOFToken();
         break;
@@ -1853,7 +1854,7 @@ export default class Tokenizer {
         break;
       }
       case $.EOF: {
-        this._err(ERR.eofInDoctype);
+        this._err(Err.eofInDoctype);
         this._createDoctypeToken(null);
         const token = this.currentToken;
         token.forceQuirks = true;
@@ -1862,7 +1863,7 @@ export default class Tokenizer {
         break;
       }
       default: {
-        this._err(ERR.missingWhitespaceBeforeDoctypeName);
+        this._err(Err.missingWhitespaceBeforeDoctypeName);
         this.state = State.BEFORE_DOCTYPE_NAME;
         this._stateBeforeDoctypeName(cp);
       }
@@ -1882,13 +1883,13 @@ export default class Tokenizer {
           break;
         }
         case $.NULL: {
-          this._err(ERR.unexpectedNullCharacter);
+          this._err(Err.unexpectedNullCharacter);
           this._createDoctypeToken(REPLACEMENT_CHARACTER);
           this.state = State.DOCTYPE_NAME;
           break;
         }
         case $.GREATER_THAN_SIGN: {
-          this._err(ERR.missingDoctypeName);
+          this._err(Err.missingDoctypeName);
           this._createDoctypeToken(null);
           const token = this.currentToken;
           token.forceQuirks = true;
@@ -1897,7 +1898,7 @@ export default class Tokenizer {
           break;
         }
         case $.EOF: {
-          this._err(ERR.eofInDoctype);
+          this._err(Err.eofInDoctype);
           this._createDoctypeToken(null);
           const token = this.currentToken;
           token.forceQuirks = true;
@@ -1929,12 +1930,12 @@ export default class Tokenizer {
         break;
       }
       case $.NULL: {
-        this._err(ERR.unexpectedNullCharacter);
+        this._err(Err.unexpectedNullCharacter);
         token.name += REPLACEMENT_CHARACTER;
         break;
       }
       case $.EOF: {
-        this._err(ERR.eofInDoctype);
+        this._err(Err.eofInDoctype);
         token.forceQuirks = true;
         this.emitCurrentDoctype(token);
         this._emitEOFToken();
@@ -1964,7 +1965,7 @@ export default class Tokenizer {
         break;
       }
       case $.EOF: {
-        this._err(ERR.eofInDoctype);
+        this._err(Err.eofInDoctype);
         token.forceQuirks = true;
         this.emitCurrentDoctype(token);
         this._emitEOFToken();
@@ -1976,7 +1977,7 @@ export default class Tokenizer {
         } else if (this._consumeSequenceIfMatch($$.SYSTEM, false)) {
           this.state = State.AFTER_DOCTYPE_SYSTEM_KEYWORD;
         } else if (!this._ensureHibernation()) {
-          this._err(ERR.invalidCharacterSequenceAfterDoctypeName);
+          this._err(Err.invalidCharacterSequenceAfterDoctypeName);
           token.forceQuirks = true;
           this.state = State.BOGUS_DOCTYPE;
           this._stateBogusDoctype(cp);
@@ -1997,33 +1998,33 @@ export default class Tokenizer {
         break;
       }
       case $.QUOTATION_MARK: {
-        this._err(ERR.missingWhitespaceAfterDoctypePublicKeyword);
+        this._err(Err.missingWhitespaceAfterDoctypePublicKeyword);
         token.publicId = "";
         this.state = State.DOCTYPE_PUBLIC_IDENTIFIER_DOUBLE_QUOTED;
         break;
       }
       case $.APOSTROPHE: {
-        this._err(ERR.missingWhitespaceAfterDoctypePublicKeyword);
+        this._err(Err.missingWhitespaceAfterDoctypePublicKeyword);
         token.publicId = "";
         this.state = State.DOCTYPE_PUBLIC_IDENTIFIER_SINGLE_QUOTED;
         break;
       }
       case $.GREATER_THAN_SIGN: {
-        this._err(ERR.missingDoctypePublicIdentifier);
+        this._err(Err.missingDoctypePublicIdentifier);
         token.forceQuirks = true;
         this.state = State.DATA;
         this.emitCurrentDoctype(token);
         break;
       }
       case $.EOF: {
-        this._err(ERR.eofInDoctype);
+        this._err(Err.eofInDoctype);
         token.forceQuirks = true;
         this.emitCurrentDoctype(token);
         this._emitEOFToken();
         break;
       }
       default: {
-        this._err(ERR.missingQuoteBeforeDoctypePublicIdentifier);
+        this._err(Err.missingQuoteBeforeDoctypePublicIdentifier);
         token.forceQuirks = true;
         this.state = State.BOGUS_DOCTYPE;
         this._stateBogusDoctype(cp);
@@ -2052,21 +2053,21 @@ export default class Tokenizer {
         break;
       }
       case $.GREATER_THAN_SIGN: {
-        this._err(ERR.missingDoctypePublicIdentifier);
+        this._err(Err.missingDoctypePublicIdentifier);
         token.forceQuirks = true;
         this.state = State.DATA;
         this.emitCurrentDoctype(token);
         break;
       }
       case $.EOF: {
-        this._err(ERR.eofInDoctype);
+        this._err(Err.eofInDoctype);
         token.forceQuirks = true;
         this.emitCurrentDoctype(token);
         this._emitEOFToken();
         break;
       }
       default: {
-        this._err(ERR.missingQuoteBeforeDoctypePublicIdentifier);
+        this._err(Err.missingQuoteBeforeDoctypePublicIdentifier);
         token.forceQuirks = true;
         this.state = State.BOGUS_DOCTYPE;
         this._stateBogusDoctype(cp);
@@ -2083,19 +2084,19 @@ export default class Tokenizer {
         break;
       }
       case $.NULL: {
-        this._err(ERR.unexpectedNullCharacter);
+        this._err(Err.unexpectedNullCharacter);
         token.publicId += REPLACEMENT_CHARACTER;
         break;
       }
       case $.GREATER_THAN_SIGN: {
-        this._err(ERR.abruptDoctypePublicIdentifier);
+        this._err(Err.abruptDoctypePublicIdentifier);
         token.forceQuirks = true;
         this.emitCurrentDoctype(token);
         this.state = State.DATA;
         break;
       }
       case $.EOF: {
-        this._err(ERR.eofInDoctype);
+        this._err(Err.eofInDoctype);
         token.forceQuirks = true;
         this.emitCurrentDoctype(token);
         this._emitEOFToken();
@@ -2116,19 +2117,19 @@ export default class Tokenizer {
         break;
       }
       case $.NULL: {
-        this._err(ERR.unexpectedNullCharacter);
+        this._err(Err.unexpectedNullCharacter);
         token.publicId += REPLACEMENT_CHARACTER;
         break;
       }
       case $.GREATER_THAN_SIGN: {
-        this._err(ERR.abruptDoctypePublicIdentifier);
+        this._err(Err.abruptDoctypePublicIdentifier);
         token.forceQuirks = true;
         this.emitCurrentDoctype(token);
         this.state = State.DATA;
         break;
       }
       case $.EOF: {
-        this._err(ERR.eofInDoctype);
+        this._err(Err.eofInDoctype);
         token.forceQuirks = true;
         this.emitCurrentDoctype(token);
         this._emitEOFToken();
@@ -2158,7 +2159,7 @@ export default class Tokenizer {
       }
       case $.QUOTATION_MARK: {
         this._err(
-          ERR.missingWhitespaceBetweenDoctypePublicAndSystemIdentifiers
+          Err.missingWhitespaceBetweenDoctypePublicAndSystemIdentifiers
         );
         token.systemId = "";
         this.state = State.DOCTYPE_SYSTEM_IDENTIFIER_DOUBLE_QUOTED;
@@ -2166,21 +2167,21 @@ export default class Tokenizer {
       }
       case $.APOSTROPHE: {
         this._err(
-          ERR.missingWhitespaceBetweenDoctypePublicAndSystemIdentifiers
+          Err.missingWhitespaceBetweenDoctypePublicAndSystemIdentifiers
         );
         token.systemId = "";
         this.state = State.DOCTYPE_SYSTEM_IDENTIFIER_SINGLE_QUOTED;
         break;
       }
       case $.EOF: {
-        this._err(ERR.eofInDoctype);
+        this._err(Err.eofInDoctype);
         token.forceQuirks = true;
         this.emitCurrentDoctype(token);
         this._emitEOFToken();
         break;
       }
       default: {
-        this._err(ERR.missingQuoteBeforeDoctypeSystemIdentifier);
+        this._err(Err.missingQuoteBeforeDoctypeSystemIdentifier);
         token.forceQuirks = true;
         this.state = State.BOGUS_DOCTYPE;
         this._stateBogusDoctype(cp);
@@ -2214,14 +2215,14 @@ export default class Tokenizer {
         break;
       }
       case $.EOF: {
-        this._err(ERR.eofInDoctype);
+        this._err(Err.eofInDoctype);
         token.forceQuirks = true;
         this.emitCurrentDoctype(token);
         this._emitEOFToken();
         break;
       }
       default: {
-        this._err(ERR.missingQuoteBeforeDoctypeSystemIdentifier);
+        this._err(Err.missingQuoteBeforeDoctypeSystemIdentifier);
         token.forceQuirks = true;
         this.state = State.BOGUS_DOCTYPE;
         this._stateBogusDoctype(cp);
@@ -2241,33 +2242,33 @@ export default class Tokenizer {
         break;
       }
       case $.QUOTATION_MARK: {
-        this._err(ERR.missingWhitespaceAfterDoctypeSystemKeyword);
+        this._err(Err.missingWhitespaceAfterDoctypeSystemKeyword);
         token.systemId = "";
         this.state = State.DOCTYPE_SYSTEM_IDENTIFIER_DOUBLE_QUOTED;
         break;
       }
       case $.APOSTROPHE: {
-        this._err(ERR.missingWhitespaceAfterDoctypeSystemKeyword);
+        this._err(Err.missingWhitespaceAfterDoctypeSystemKeyword);
         token.systemId = "";
         this.state = State.DOCTYPE_SYSTEM_IDENTIFIER_SINGLE_QUOTED;
         break;
       }
       case $.GREATER_THAN_SIGN: {
-        this._err(ERR.missingDoctypeSystemIdentifier);
+        this._err(Err.missingDoctypeSystemIdentifier);
         token.forceQuirks = true;
         this.state = State.DATA;
         this.emitCurrentDoctype(token);
         break;
       }
       case $.EOF: {
-        this._err(ERR.eofInDoctype);
+        this._err(Err.eofInDoctype);
         token.forceQuirks = true;
         this.emitCurrentDoctype(token);
         this._emitEOFToken();
         break;
       }
       default: {
-        this._err(ERR.missingQuoteBeforeDoctypeSystemIdentifier);
+        this._err(Err.missingQuoteBeforeDoctypeSystemIdentifier);
         token.forceQuirks = true;
         this.state = State.BOGUS_DOCTYPE;
         this._stateBogusDoctype(cp);
@@ -2296,21 +2297,21 @@ export default class Tokenizer {
         break;
       }
       case $.GREATER_THAN_SIGN: {
-        this._err(ERR.missingDoctypeSystemIdentifier);
+        this._err(Err.missingDoctypeSystemIdentifier);
         token.forceQuirks = true;
         this.state = State.DATA;
         this.emitCurrentDoctype(token);
         break;
       }
       case $.EOF: {
-        this._err(ERR.eofInDoctype);
+        this._err(Err.eofInDoctype);
         token.forceQuirks = true;
         this.emitCurrentDoctype(token);
         this._emitEOFToken();
         break;
       }
       default: {
-        this._err(ERR.missingQuoteBeforeDoctypeSystemIdentifier);
+        this._err(Err.missingQuoteBeforeDoctypeSystemIdentifier);
         token.forceQuirks = true;
         this.state = State.BOGUS_DOCTYPE;
         this._stateBogusDoctype(cp);
@@ -2327,19 +2328,19 @@ export default class Tokenizer {
         break;
       }
       case $.NULL: {
-        this._err(ERR.unexpectedNullCharacter);
+        this._err(Err.unexpectedNullCharacter);
         token.systemId += REPLACEMENT_CHARACTER;
         break;
       }
       case $.GREATER_THAN_SIGN: {
-        this._err(ERR.abruptDoctypeSystemIdentifier);
+        this._err(Err.abruptDoctypeSystemIdentifier);
         token.forceQuirks = true;
         this.emitCurrentDoctype(token);
         this.state = State.DATA;
         break;
       }
       case $.EOF: {
-        this._err(ERR.eofInDoctype);
+        this._err(Err.eofInDoctype);
         token.forceQuirks = true;
         this.emitCurrentDoctype(token);
         this._emitEOFToken();
@@ -2360,19 +2361,19 @@ export default class Tokenizer {
         break;
       }
       case $.NULL: {
-        this._err(ERR.unexpectedNullCharacter);
+        this._err(Err.unexpectedNullCharacter);
         token.systemId += REPLACEMENT_CHARACTER;
         break;
       }
       case $.GREATER_THAN_SIGN: {
-        this._err(ERR.abruptDoctypeSystemIdentifier);
+        this._err(Err.abruptDoctypeSystemIdentifier);
         token.forceQuirks = true;
         this.emitCurrentDoctype(token);
         this.state = State.DATA;
         break;
       }
       case $.EOF: {
-        this._err(ERR.eofInDoctype);
+        this._err(Err.eofInDoctype);
         token.forceQuirks = true;
         this.emitCurrentDoctype(token);
         this._emitEOFToken();
@@ -2400,14 +2401,14 @@ export default class Tokenizer {
         break;
       }
       case $.EOF: {
-        this._err(ERR.eofInDoctype);
+        this._err(Err.eofInDoctype);
         token.forceQuirks = true;
         this.emitCurrentDoctype(token);
         this._emitEOFToken();
         break;
       }
       default: {
-        this._err(ERR.unexpectedCharacterAfterDoctypeSystemIdentifier);
+        this._err(Err.unexpectedCharacterAfterDoctypeSystemIdentifier);
         this.state = State.BOGUS_DOCTYPE;
         this._stateBogusDoctype(cp);
       }
@@ -2424,7 +2425,7 @@ export default class Tokenizer {
         break;
       }
       case $.NULL: {
-        this._err(ERR.unexpectedNullCharacter);
+        this._err(Err.unexpectedNullCharacter);
         break;
       }
       case $.EOF: {
@@ -2443,7 +2444,7 @@ export default class Tokenizer {
         break;
       }
       case $.EOF: {
-        this._err(ERR.eofInCdata);
+        this._err(Err.eofInCdata);
         this._emitEOFToken();
         break;
       }
@@ -2517,7 +2518,7 @@ export default class Tokenizer {
       this._flushCodePointConsumedAsCharacterReference(cp);
     } else {
       if (cp === $.SEMICOLON) {
-        this._err(ERR.unknownNamedCharacterReference);
+        this._err(Err.unknownNamedCharacterReference);
       }
       this.state = this.returnState;
       this._callState(cp);

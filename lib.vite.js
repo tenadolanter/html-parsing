@@ -11,9 +11,7 @@ export default () => {
       // 库模式下不单独拆分css了
       cssCodeSplit: false,
     },
-    plugins: [
-      Vue(),
-    ],
+    plugins: [],
     resolve: {
       alias: {
         "@src": resolve("./src"),

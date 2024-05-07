@@ -5,7 +5,7 @@ import {
   isSurrogate,
   isSurrogatePair,
   isUndefinedCodePoint,
-  ERR,
+  Err,
 } from "../common/index.js";
 /**
  * 逐个字符解析html
@@ -188,14 +188,14 @@ export default class Processor {
       this.endOfChunkHit = true;
       return $.EOF;
     }
-    this._err(ERR.surrogateInInputStream);
+    this._err(Err.surrogateInInputStream);
     return cp;
   }
   _checkForProblematicCharacters(cp) {
     if (isControlCodePoint(cp)) {
-      this._err(ERR.controlCharacterInInputStream);
+      this._err(Err.controlCharacterInInputStream);
     } else if (isUndefinedCodePoint(cp)) {
-      this._err(ERR.noncharacterInInputStream);
+      this._err(Err.noncharacterInInputStream);
     }
   }
 }
