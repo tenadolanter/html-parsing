@@ -1370,8 +1370,9 @@ export default class Tokenizer {
         break;
       }
       default: {
+        const { uppercaseAttrEnabled } = this.options;
         this.currentAttr.name += String.fromCodePoint(
-          isAsciiUpper(cp) ? toAsciiLower(cp) : cp
+          isAsciiUpper(cp) && !uppercaseAttrEnabled ? toAsciiLower(cp) : cp
         );
       }
     }
