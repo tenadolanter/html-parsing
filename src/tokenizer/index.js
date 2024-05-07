@@ -19,6 +19,7 @@ import {
   SEQUENCES as $$,
   TAG_ID,
   getTagID,
+  getTokenAttr,
 } from "../common/index.js";
 
 export const TokenizerMode = {
