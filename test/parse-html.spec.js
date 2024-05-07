@@ -1,6 +1,6 @@
 const chai = require("chai");
 const assert = chai.assert;
-import { Parse, ParserOption } from "../src/index.js";
+const { Parse, ParserOption }  = require("../lib/index.umd.js");
 
 describe("解析html", () => {
   it("能正确的解析html", () => {
