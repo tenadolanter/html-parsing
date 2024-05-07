@@ -886,8 +886,9 @@ export default class Tokenizer {
         break;
       }
       default: {
+        const { uppercaseTagEnabled } = this.options;
         token.tagName += String.fromCodePoint(
-          isAsciiUpper(cp) ? toAsciiLower(cp) : cp
+          isAsciiUpper(cp) && !uppercaseTagEnabled ? toAsciiLower(cp) : cp
         );
       }
     }

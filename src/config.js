@@ -4,6 +4,8 @@ const default_config = {
   selfCloseEnabled: false,
   // 是否支持大写属性
   uppercaseAttrEnabled: false,
+  // 是否支持标签大写
+  uppercaseTagEnabled: false,
   // 是否支持自定义标签
   customTagEnabled: false,
   // 是否解析 <script> 和 <template> 标签中的内容
