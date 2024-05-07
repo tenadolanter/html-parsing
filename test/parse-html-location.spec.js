@@ -18,6 +18,7 @@ describe("解析html后保留位置信息", () => {
       customTagEnabled: true,
       uppercaseTagEnabled: true,
       uppercaseAttrEnabled: true,
+      sourceCodeLocationInfo: true,
     }
     const ast = ParseFragment(sourceCode, option);
     const code = SerializeFragment(ast, option);

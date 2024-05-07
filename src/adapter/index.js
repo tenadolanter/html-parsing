@@ -209,7 +209,7 @@ const defaultTreeAdapter =  {
     return node.sourceCodeLocation;
   },
 
-  updateNodeSourceCodeLocation(node, endLocationLocation) {
+  updateNodeSourceCodeLocation(node, endLocation) {
     node.sourceCodeLocation = { ...node.sourceCodeLocation, ...endLocation };
   },
 };
