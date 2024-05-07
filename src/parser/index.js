@@ -135,11 +135,11 @@ export default class Parser {
       ...options,
     };
 
-    fragmentContext ??= opts.treeAdapter.createElement(
+    fragmentContext = (fragmentContext === null || fragmentContext === undefined) ?  opts.treeAdapter.createElement(
       TN.TEMPLATE,
       NS.HTML,
       []
-    );
+    ) : fragmentContext;
 
     const documentMock = opts.treeAdapter.createElement(
       "documentmock",

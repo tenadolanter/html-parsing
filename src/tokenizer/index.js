@@ -219,7 +219,7 @@ export default class Tokenizer {
       token.attrs.push(this.currentAttr);
 
       if (token.location && this.currentLocation) {
-        const attrLocations = (token.location.attrs ??= Object.create(null));
+        const attrLocations = (token.location.attrs = (token.location.attrs === null || token.location.attrs === undefined) ?  Object.create(null): token.location.attrs);
         attrLocations[this.currentAttr.name] = this.currentLocation;
 
         this._leaveAttrValue();
