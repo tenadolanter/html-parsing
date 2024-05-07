@@ -43,6 +43,8 @@ export default class Tokenizer {
   currentAttr = { name: "", value: "" };
 
   constructor(options, handler) {
+    this.options = options;
+    this.handler = handler;
     this.preprocessor = new Processor(handler);
     this.currentLocation = this.getCurrentLocation(-1);
     this.entityDecoder = new EntityDecoder(

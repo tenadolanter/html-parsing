@@ -1,6 +1,7 @@
 import { OpenElementStack } from "./open-element-stack.js";
 import { FormattingElementList, EntryType } from "./formatting-element-list.js";
 import Tokenizer, { TokenizerMode } from "../tokenizer/index.js";
+import ParserOption from "../config.js"
 import {
   TokenType,
   getTokenAttr,
@@ -74,13 +75,6 @@ const TABLE_STRUCTURE_TAGS = new Set([
   $.TR,
 ]);
 
-const defaultParserOptions = {
-  scriptingEnabled: true,
-  sourceCodeLocationInfo: false,
-  treeAdapter: DefaultAdapter,
-  onParseError: null,
-};
-
 export default class Parser {
   treeAdapter;
   onParseError;
@@ -90,7 +84,7 @@ export default class Parser {
 
   constructor(options, document, fragmentContext = null, scriptHandler = null) {
     this.options = {
-      ...defaultParserOptions,
+      ...ParserOption,
       ...options,
     };
 
@@ -131,7 +125,7 @@ export default class Parser {
 
   static getFragmentParser(fragmentContext, options) {
     const opts = {
-      ...defaultParserOptions,
+      ...ParserOption,
       ...options,
     };
 
