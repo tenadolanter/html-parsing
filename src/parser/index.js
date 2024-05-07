@@ -1,7 +1,6 @@
 import { OpenElementStack } from "./open-element-stack.js";
 import { FormattingElementList, EntryType } from "./formatting-element-list.js";
-
-import Tokenizer, { TokenizerMode } from "../tokenizer";
+import Tokenizer, { TokenizerMode } from "../tokenizer/index.js";
 import {
   TokenType,
   getTokenAttr,
@@ -19,14 +18,13 @@ import {
   CODE_POINTS,
   REPLACEMENT_CHARACTER,
   isIntegrationPoint,
-  isIntegrationPoint,
   adjustTokenMathMLAttrs,
   adjustTokenXMLAttrs,
   adjustTokenSVGAttrs,
   causesExit,
   adjustTokenSVGTagName,
-} from "../common";
-import DefaultAdapter from "../adapter";
+} from "../common/index.js";
+import DefaultAdapter from "../adapter/index.js";
 
 const HIDDEN_INPUT_TYPE = "hidden";
 

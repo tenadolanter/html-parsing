@@ -14,7 +14,7 @@ import {
   getErrorForNumericCharacterReference,
   TokenType,
   State,
-} from "../common";
+} from "../common/index.js";
 
 export const TokenizerMode = {
   DATA: State.DATA,

@@ -4,8 +4,9 @@
   "description": "类html解析库",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha --recursive"
   },
+  "type": "module",
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/tenadolanter/html-parsing.git"
@@ -18,5 +19,9 @@
   "homepage": "https://github.com/tenadolanter/html-parsing#readme",
   "dependencies": {
     "entities": "^4.5.0"
+  },
+  "devDependencies": {
+    "chai": "^5.1.0",
+    "mocha": "^10.4.0"
   }
 }

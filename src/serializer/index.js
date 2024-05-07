@@ -1,6 +1,6 @@
 import { escapeText, escapeAttribute } from "entities/lib/escape.js";
-import { TAG_NAMES as $, NS, hasUnescapedText } from "../common";
-import DefaultAdapter from "../adapter";
+import { TAG_NAMES as $, NS, hasUnescapedText } from "../common/index.js";
+import DefaultAdapter from "../adapter/index.js";
 
 const VOID_ELEMENTS = new Set([
   $.AREA,

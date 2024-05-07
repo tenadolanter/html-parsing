@@ -1,7 +1,8 @@
 import Parser from "./parser/index.js";
-import Tokenizer, { TokenizerMode } from "./tokenizer";
-import Serialize, { SerializeOuter } from "./serializer";
-import TreeAdapter from "./adapter";
+import Tokenizer, { TokenizerMode } from "./tokenizer/index.js";
+import Serialize, { SerializeOuter } from "./serializer/index.js";
+import TreeAdapter from "./adapter/index.js";
+import ParserOption from "./config.js"
 /**
  * 解析html字符串
  *
@@ -29,4 +30,5 @@ export {
   Serialize,
   SerializeOuter,
   TreeAdapter,
+  ParserOption,
 };

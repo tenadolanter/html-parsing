@@ -1,4 +1,4 @@
-import { DOCUMENT_MODE } from "../common";
+import { DOCUMENT_MODE } from "../common/index.js";
 
 export default {
   createDocument: () => {

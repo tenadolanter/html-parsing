@@ -6,7 +6,7 @@ import {
   isSurrogatePair,
   isUndefinedCodePoint,
   ERR,
-} from "../common";
+} from "../common/index.js";
 /**
  * 逐个字符解析html
  * @example
