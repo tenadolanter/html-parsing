@@ -4,6 +4,8 @@
   "description": "类html解析库",
   "main": "index.js",
   "scripts": {
+    "build:example": "VITE_CLI_TYPE=example vite build",
+    "build:lib": "VITE_CLI_TYPE=lib vite build",
     "test": "mocha --recursive"
   },
   "type": "module",
@@ -22,6 +24,7 @@
   },
   "devDependencies": {
     "chai": "^5.1.0",
-    "mocha": "^10.4.0"
+    "mocha": "^10.4.0",
+    "vite": "^5.2.11"
   }
 }
