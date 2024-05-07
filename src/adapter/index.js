@@ -1,6 +1,6 @@
 import { DOCUMENT_MODE } from "../common/index.js";
 
-export default {
+const defaultTreeAdapter =  {
   createDocument: () => {
     return {
       nodeName: "#document",
@@ -83,7 +83,7 @@ export default {
     }
   },
 
-  setDocumentMode(document, mode_MODE) {
+  setDocumentMode(document, mode) {
     document.mode = mode;
   },
 
@@ -213,3 +213,5 @@ export default {
     node.sourceCodeLocation = { ...node.sourceCodeLocation, ...endLocation };
   },
 };
+
+export default defaultTreeAdapter;

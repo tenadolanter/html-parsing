@@ -147,7 +147,7 @@ export default class Processor {
       cp = this._processSurrogate(cp);
     }
     const isCommonValidRange =
-      this.__handler.onParseError === null ||
+      this._handler.onParseError === null ||
       (cp > 0x1f && cp < 0x7f) ||
       cp === $.LINE_FEED ||
       cp === $.CARRIAGE_RETURN ||
@@ -167,9 +167,9 @@ export default class Processor {
   }
 
   _err(code) {
-    if (this.__handler.onParseError && this.lastErrOffset !== this.offset) {
+    if (this._handler.onParseError && this.lastErrOffset !== this.offset) {
       this.lastErrOffset = this.offset;
-      this.__handler.onParseError(this.getError(code, 0));
+      this._handler.onParseError(this.getError(code, 0));
     }
   }
   _addGap() {

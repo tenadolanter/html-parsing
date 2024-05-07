@@ -10,6 +10,8 @@ export default () => {
       outDir: "lib",
       // 库模式下不单独拆分css了
       cssCodeSplit: false,
+      sourcemap: true,
+      minify: false,
     },
     plugins: [],
     resolve: {

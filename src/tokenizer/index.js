@@ -15,6 +15,10 @@ import {
   TokenType,
   State,
   Err,
+  CODE_POINTS as $,
+  SEQUENCES as $$,
+  TAG_ID,
+  getTagID,
 } from "../common/index.js";
 
 export const TokenizerMode = {

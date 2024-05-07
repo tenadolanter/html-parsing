@@ -81,6 +81,8 @@ export class OpenElementStack {
 
   constructor(document, treeAdapter, handler) {
     this.current = document;
+    this.treeAdapter = treeAdapter;
+    this.handler = handler;
   }
 
   _indexOf(element) {

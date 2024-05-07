@@ -9,7 +9,7 @@ describe("解析html", () => {
       ...ParserOption,
     }
     const result = Parse(sourceCode, option);
-    sourceCode = code;
+    console.log("result", result);
     // assert.equal(sourceCode, resultCode);
   })
 })
