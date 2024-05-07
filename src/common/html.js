@@ -448,7 +448,8 @@ const TAG_NAME_TO_ID = new Map([
 ]);
 
 export function getTagID(tagName) {
-  return TAG_NAME_TO_ID.get(tagName) ?? TAG_ID.UNKNOWN;
+  const tag = TAG_NAME_TO_ID.get(tagName)
+  return (tag === null || tag === undefined) ? TAG_ID.UNKNOWN: tag;
 }
 
 const $ = TAG_ID;

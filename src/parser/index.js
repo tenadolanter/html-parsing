@@ -101,7 +101,7 @@ export default class Parser {
       this.options.sourceCodeLocationInfo = true;
     }
 
-    this.document = document ?? this.treeAdapter.createDocument();
+    this.document = (document === null || document === undefined) ? this.treeAdapter.createDocument() : document;
 
     this.tokenizer = new Tokenizer(this.options, this);
     this.activeFormattingElements = new FormattingElementList(this.treeAdapter);
@@ -110,7 +110,7 @@ export default class Parser {
       ? getTagID(this.treeAdapter.getTagName(fragmentContext))
       : $.UNKNOWN;
     this._setContextModes(
-      fragmentContext ?? this.document,
+      (fragmentContext === null || fragmentContext === undefined) ? this.document: fragmentContext,
       this.fragmentContextID
     );
 
@@ -211,7 +211,7 @@ export default class Parser {
   _err(token, code, beforeToken) {
     if (!this.onParseError) return;
 
-    const loc = token.location ?? BASE_LOC;
+    const loc = (token.location === null || token.location === undefined) ? BASE_LOC : token.location;
     const err = {
       code,
       startLine: loc.startLine,
