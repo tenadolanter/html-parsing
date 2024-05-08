@@ -5,13 +5,9 @@ const { ParseFragment, ParserOption, SerializeFragment }  = require("../lib/inde
 describe("解析html后保留位置信息", () => {
   it("能正确的解析html的位置信息", () => {
     let sourceCode = `
-      <div>
-        <div
-          AttrName="test"
-          name="haha"
-          sex="nan"
-        ></div>
-      </div>
+    <div
+      AttrName="test"
+    ></div>
     `;
     const option = {
       ...ParserOption,

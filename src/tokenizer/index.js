@@ -130,6 +130,7 @@ export default class Tokenizer {
     while (this.active && !this.paused) {
       this.consumedAfterSnapshot = 0;
       const cp = this._consume();
+      // 如果字符到结尾，说明已经处理完成
       if (!this._ensureHibernation()) {
         this._callState(cp);
       }
