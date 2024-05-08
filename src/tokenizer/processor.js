@@ -123,16 +123,19 @@ export default class Processor {
       this.line++;
       this._lineStartPos = this.pos;
     }
+    // 如果到字符结尾
     if (this.pos >= this.html.length) {
       this.endOfChunkHit = !this.lastChunkWritten;
       return $.EOF;
     }
     let cp = this.html.charCodeAt(this.pos);
+    // 如果是\r
     if (cp === $.CARRIAGE_RETURN) {
       this._isEol = true;
       this._skipNextNewLine = true;
       return $.LINE_FEED;
     }
+    // 如果是\n
     if (cp === $.LINE_FEED) {
       this._isEol = true;
       if (this._skipNextNewLine) {
@@ -143,6 +146,8 @@ export default class Processor {
       }
     }
     this._skipNextNewLine = false;
+    // charCodeAt方法用于获取指定索引位置的 UTF-16 码元，但是一些特殊字符如表意文字、某些emoji表情符号等使用两个UTF-16 码元表示
+    // 判断当前的cp是否为surrogate的一部分
     if (isSurrogate(cp)) {
       cp = this._processSurrogate(cp);
     }

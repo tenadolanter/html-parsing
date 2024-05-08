@@ -25,7 +25,6 @@ import {
   causesExit,
   adjustTokenSVGTagName,
 } from "../common/index.js";
-import DefaultAdapter from "../adapter/index.js";
 
 const HIDDEN_INPUT_TYPE = "hidden";
 
@@ -123,6 +122,7 @@ export default class Parser {
     return parser.document;
   }
 
+  // 生成html片段的Parser实例
   static getFragmentParser(fragmentContext, options) {
     const opts = {
       ...ParserOption,
@@ -147,9 +147,13 @@ export default class Parser {
       parser.tmplInsertionModeStack.unshift(InsertionMode.IN_TEMPLATE);
     }
 
+    // 为html片段的解析，初始化tokenizer
     parser._initTokenizerForFragmentParsing();
+    // 在解析hmtl片段的时候，插入一个虚拟的根元素
     parser._insertFakeRootElement();
+    // 初始化插入模式，遍历openElements，为不同的元素设置适当的插入模式
     parser._resetInsertionMode();
+    // 解析html片段中的form元素
     parser._findFormInFragmentContext();
 
     return parser;

@@ -91,6 +91,7 @@ export default class Tokenizer {
       endOffset: -1,
     };
   }
+  // 将html字符串传入解析器中进行解析
   write(chunk, isLastChunk, writeCallback) {
     this.active = true;
     this.preprocessor.write(chunk, isLastChunk);
