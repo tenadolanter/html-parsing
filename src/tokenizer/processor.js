@@ -16,7 +16,7 @@ import {
  * let cp = preprocessor.advance();
  * while(cp !== $.EOF) { cp = preprocessor.advance(); }
  * console.log(processor.html);
-*/
+ */
 export default class Processor {
   html = "";
   pos = -1;
@@ -151,6 +151,7 @@ export default class Processor {
     if (isSurrogate(cp)) {
       cp = this._processSurrogate(cp);
     }
+    // 检查当前字符是否在有效范围，如果不在则报错
     const isCommonValidRange =
       this._handler.onParseError === null ||
       (cp > 0x1f && cp < 0x7f) ||
