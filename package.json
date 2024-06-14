@@ -25,10 +25,8 @@
     "htmlserializer"
   ],
   "scripts": {
-    "mytest": "ts-node ./build/index.js",
-    "build:example": "VITE_CLI_TYPE=example vite build",
-    "build:lib": "VITE_CLI_TYPE=lib vite build",
-    "test": "npm run build:lib && mocha --recursive"
+    "build": "vite build",
+    "test": "npm run build && mocha --recursive"
   },
   "repository": {
     "type": "git",
