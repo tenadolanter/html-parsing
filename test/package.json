@@ -1,0 +1,49 @@
+{
+  "name": "html-parsing",
+  "version": "0.0.1",
+  "description": "类html解析库",
+  "main": "lib/index.umd.js",
+  "module": "lib/index.mjs",
+  "exports": {
+    ".": {
+      "require": "./lib/index.umd.js",
+      "import": "./lib/index.mjs"
+    },
+    "./*": "./*"
+  },
+  "files": [
+    "lib"
+  ],
+  "keywords": [
+    "html",
+    "parser",
+    "html parser",
+    "html5 parser",
+    "htmlparser",
+    "serializer",
+    "html serializer",
+    "htmlserializer"
+  ],
+  "scripts": {
+    "build": "vite build",
+    "test": "npm run build && mocha --recursive"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/tenadolanter/html-parsing.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tenadolanter/html-parsing/issues"
+  },
+  "homepage": "https://github.com/tenadolanter/html-parsing#readme",
+  "dependencies": {
+    "entities": "^4.5.0"
+  },
+  "devDependencies": {
+    "chai": "^4.4.1",
+    "mocha": "^10.4.0",
+    "vite": "^5.2.11"
+  }
+}
